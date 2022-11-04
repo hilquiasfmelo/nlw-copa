@@ -1,4 +1,5 @@
 import { FormEvent, useCallback, useState } from 'react'
+import { GetStaticProps } from 'next'
 import Image from 'next/image'
 
 import { API } from '../lib/axios'
@@ -116,7 +117,7 @@ export default function Home({ poolCount, guessCount, userCount }: HomeProps) {
   )
 }
 
-export const getServerSideProps = async () => {
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
   const [poolCountResponse, guessCountResponse, userCountResponse] =
     await Promise.all([
       API.get('/pools/count'),
@@ -130,5 +131,6 @@ export const getServerSideProps = async () => {
       guessCount: guessCountResponse.data.count,
       userCount: userCountResponse.data.count,
     },
+    revalidate: 60,
   }
 }
